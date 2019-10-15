@@ -2,6 +2,7 @@
 import random
 import copy
 
+# John Hunter
 
 class HumanPlayer:
 
