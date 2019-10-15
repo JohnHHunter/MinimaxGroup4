@@ -1,9 +1,9 @@
-# adapted by Toby Dragon from original source code by Al Sweigart, available with creative commons license: https://inventwithpython.com/#donate
+# adapted by Toby Dragon from original source code by Al Sweigart, available with creative commons license:
+# https://inventwithpython.com/#donate
 import random
 import copy
 from math import inf
 
-# John Hunter
 
 class HumanPlayer:
 
@@ -14,7 +14,7 @@ class HumanPlayer:
         # Let the player type in their move.
         # Returns the move as [x, y] (or returns the strings 'hints' or 'quit')
         valid_digits = []
-        for i in range(1, board.get_size()+1):
+        for i in range(1, board.get_size() + 1):
             valid_digits.append(str(i))
         no_valid_move = True
         while no_valid_move:
@@ -22,7 +22,7 @@ class HumanPlayer:
             if len(move) == 2 and move[0] in valid_digits and move[1] in valid_digits:
                 x = int(move[0]) - 1
                 y = int(move[1]) - 1
-                if board.is_valid_move(self.symbol, ( x, y) ):
+                if board.is_valid_move(self.symbol, (x, y)):
                     no_valid_move = False
                     return [x, y]
                 else:
@@ -65,29 +65,26 @@ class GreedyComputerPlayer:
 
         return best_move[2]
 
-class minimaxPlayer:
+
+class MinimaxPlayer:
 
     def __init__(self, symbol):
         self.symbol = symbol
-
 
     def get_move(self, board):
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
         answer = minimax(board, 4, self.symbol, True)[:2]
-        return (answer[0], answer[1])
-
-
+        return answer[0], answer[1]
 
 
 def minimax(board, depth, symbol, max):
-    if max == True:
+    if max:
         best = [-1, -1, -inf]
     else:
         best = [-1, -1, inf]
 
-    if (depth == 0 or len(board.calc_valid_moves(symbol)) == 0):
-
+    if depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
         return [-1, -1, utility(board, symbol)]
 
     for move in board.calc_valid_moves(symbol):
@@ -96,16 +93,13 @@ def minimax(board, depth, symbol, max):
         score = minimax(baseBoard, depth - 1, flipSymbol(symbol), not max)
         score[0], score[1] = move[0], move[1]
 
-        if max == True:
+        if max:
             if score[2] > best[2]:
                 best = score
 
         else:
             if score[2] < best[2]:
                 best = score
-
-
-
 
     return best
 
@@ -121,13 +115,14 @@ def utility(board, symbol):
     for x in range(board.get_size()):
         for y in range(board.get_size()):
             if board.get_symbol_for_position((x, y)) == symbol:
-                if ((x == 0 and y == 0) or (x == board.get_size() - 1 and y == board.get_size() - 1)):
+                if (x == 0 and y == 0) or (x == board.get_size() - 1 and y == board.get_size() - 1):
                     score += 100
-                elif (x == 0 or y == 0 or x == board.get_size() - 1 or y == board.get_size() - 1):
+                elif x == 0 or y == 0 or x == board.get_size() - 1 or y == board.get_size() - 1:
                     score += 10
                 else:
                     score += 1
     return score
+
 
 def flipSymbol(symbol):
     if symbol == 'X':

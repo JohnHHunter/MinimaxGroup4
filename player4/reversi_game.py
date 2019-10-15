@@ -89,7 +89,7 @@ def compare_players(player1, player2, board_size=6, board_filename=None):
 
 def main():
     # ReversiGame(MinimaxComputerPlayer("X"), HumanPlayer("O"))
-    compare_players(minimaxPlayer("X"), RandomComputerPlayer("O"))
+    compare_players(MinimaxPlayer("X"), RandomComputerPlayer("O"))
 
 
 if __name__ == "__main__":
