@@ -115,3 +115,58 @@ def minimax(board, depth, my_turn):
                 best = score
 
     return best
+
+# def minimax(board, depth, symbol, max):
+#     if max == True:
+#         best = [-1, -1, -inf]
+#     else:
+#         best = [-1, -1, inf]
+#
+#     if (depth == 0 or len(board.calc_valid_moves(symbol)) == 0):
+#
+#         return [-1, -1, utility(board, symbol)]
+#
+#     for move in board.calc_valid_moves(symbol):
+#         baseBoard = copy.deepcopy(board)
+#         baseBoard.make_move(symbol, move)
+#         score = minimax(baseBoard, depth - 1, flipSymbol(symbol), not max)
+#         score[0], score[1] = move[0], move[1]
+#
+#         if max == True:
+#             if score[2] > best[2]:
+#                 best = score
+#
+#         else:
+#             if score[2] < best[2]:
+#                 best = score
+#
+#
+#
+#
+#     return best
+#
+#
+# def basicUtility(board, symbol):
+#     scores = board.calc_scores()
+#
+#     return scores[symbol]
+#
+#
+# def utility(board, symbol):
+#     score = 0
+#     for x in range(board.get_size()):
+#         for y in range(board.get_size()):
+#             if board.get_symbol_for_position((x, y)) == symbol:
+#                 if ((x == 0 and y == 0) or (x == board.get_size() - 1 and y == board.get_size() - 1)):
+#                     score += 100
+#                 elif (x == 0 or y == 0 or x == board.get_size() - 1 or y == board.get_size() - 1):
+#                     score += 10
+#                 else:
+#                     score += 1
+#     return score
+#
+# def flipSymbol(symbol):
+#     if symbol == 'X':
+#         return 'O'
+#     else:
+#         return 'X'
