@@ -1,6 +1,7 @@
 # adapted by Toby Dragon from original source code by Al Sweigart, available with creative commons license: https://inventwithpython.com/#donate
 import random
 import copy
+from math import inf
 
 # John Hunter
 
@@ -64,113 +65,74 @@ class GreedyComputerPlayer:
 
         return best_move[2]
 
-
-# With the current implementation, minimax must be 'X'
-class MinimaxComputerPlayer:
+class minimaxPlayer:
 
     def __init__(self, symbol):
         self.symbol = symbol
 
+
     def get_move(self, board):
-        move = minimax(board, 5, True)[0]
-        return move
+        answer = minimax(board, 4, self.symbol, True)[:2]
+        return (answer[0], answer[1])
 
 
-def minimax(board, depth, my_turn):
 
-    if my_turn:
-        best = [(0, 0), -999]
-        symbol = 'X'
-    else:  # opponents turn
-        best = [(0, 0), 999]
-        symbol = 'O'
 
-    # break case
-    if depth == 0 or not board.game_continues():
-        end_scores = board.calc_scores()
-        if end_scores['X'] > end_scores['O']:
-            return [None, 1]
-        if end_scores['X'] < end_scores['O']:
-            return [None, -1]
-        else:
-            # tie game
-            return [None, 0]
+def minimax(board, depth, symbol, max):
+    if max == True:
+        best = [-1, -1, -inf]
+    else:
+        best = [-1, -1, inf]
+
+    if (depth == 0 or len(board.calc_valid_moves(symbol)) == 0):
+
+        return [-1, -1, utility(board, symbol)]
 
     for move in board.calc_valid_moves(symbol):
-        # set up possible board
-        new_board = copy.deepcopy(board)
-        new_board.make_move(symbol, move)
-        score = minimax(new_board, depth-1, not my_turn)
-        score[0] = move
+        baseBoard = copy.deepcopy(board)
+        baseBoard.make_move(symbol, move)
+        score = minimax(baseBoard, depth - 1, flipSymbol(symbol), not max)
+        score[0], score[1] = move[0], move[1]
 
-        if score[1] == 999 or score[1] == -999:
-             score[1] = -1
-
-        # compare the results of the possible board
-        if my_turn:
-            if score[1] > best[1]:
+        if max == True:
+            if score[2] > best[2]:
                 best = score
+
         else:
-            if score[1] < best[1]:
+            if score[2] < best[2]:
                 best = score
+
+
+
 
     return best
 
-# def minimax(board, depth, symbol, max):
-#     if max == True:
-#         best = [-1, -1, -inf]
-#     else:
-#         best = [-1, -1, inf]
-#
-#     if (depth == 0 or len(board.calc_valid_moves(symbol)) == 0):
-#
-#         return [-1, -1, utility(board, symbol)]
-#
-#     for move in board.calc_valid_moves(symbol):
-#         baseBoard = copy.deepcopy(board)
-#         baseBoard.make_move(symbol, move)
-#         score = minimax(baseBoard, depth - 1, flipSymbol(symbol), not max)
-#         score[0], score[1] = move[0], move[1]
-#
-#         if max == True:
-#             if score[2] > best[2]:
-#                 best = score
-#
-#         else:
-#             if score[2] < best[2]:
-#                 best = score
-#
-#
-#
-#
-#     return best
-#
-#
-# def basicUtility(board, symbol):
-#     scores = board.calc_scores()
-#
-#     return scores[symbol]
-#
-#
-# def utility(board, symbol):
-#     score = 0
-#     for x in range(board.get_size()):
-#         for y in range(board.get_size()):
-#             if board.get_symbol_for_position((x, y)) == symbol:
-#                 if ((x == 0 and y == 0) or (x == board.get_size() - 1 and y == board.get_size() - 1)):
-#                     score += 100
-#                 elif (x == 0 or y == 0 or x == board.get_size() - 1 or y == board.get_size() - 1):
-#                     score += 10
-#                 else:
-#                     score += 1
-#     return score
-#
-# def flipSymbol(symbol):
-#     if symbol == 'X':
-#         return 'O'
-#     else:
-#         return 'X'
-#
+
+def basicUtility(board, symbol):
+    scores = board.calc_scores()
+
+    return scores[symbol]
+
+
+def utility(board, symbol):
+    score = 0
+    for x in range(board.get_size()):
+        for y in range(board.get_size()):
+            if board.get_symbol_for_position((x, y)) == symbol:
+                if ((x == 0 and y == 0) or (x == board.get_size() - 1 and y == board.get_size() - 1)):
+                    score += 100
+                elif (x == 0 or y == 0 or x == board.get_size() - 1 or y == board.get_size() - 1):
+                    score += 10
+                else:
+                    score += 1
+    return score
+
+def flipSymbol(symbol):
+    if symbol == 'X':
+        return 'O'
+    else:
+        return 'X'
+
 # class Player:
 #     def __init__(self, symbol):
 #         self.symbol = symbol
