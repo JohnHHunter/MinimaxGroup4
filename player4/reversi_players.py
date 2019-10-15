@@ -72,6 +72,8 @@ class minimaxPlayer:
 
 
     def get_move(self, board):
+        if len(board.calc_valid_moves(self.symbol)) == 1:
+            return board.calc_valid_moves(self.symbol)[0]
         answer = minimax(board, 4, self.symbol, True)[:2]
         return (answer[0], answer[1])
 
@@ -132,57 +134,3 @@ def flipSymbol(symbol):
         return 'O'
     else:
         return 'X'
-
-# class Player:
-#     def __init__(self, symbol):
-#         self.symbol = symbol
-#
-#     # def evaluate(self, board, player):
-#     #     if player == "MAX":
-#     #         scores = board.calc_scores()
-#     #         diff = scores[self.symbol] - scores[board.get_opponent_symbol(self.symbol)]
-#     #     else:
-#     #         scores = board.calc_scores()
-#     #         diff = scores[board.get_opponent_symbol(self.symbol)] - scores[self.symbol]
-#     #
-#     #     return int(diff)
-#     def evaluate(self, board):
-#         scores = board.calc_scores()
-#         diff = scores[self.symbol] - scores[board.get_opponent_symbol(self.symbol)]
-#         return int(diff)
-#
-#     def minimax(self, board, depth, player):
-#         if player == "MAX":
-#             current_symbol = self.symbol
-#             best = [-1, -1, -infinity]
-#         else:
-#             current_symbol = board.get_opponent_symbol(self.symbol)
-#             best = [-1, -1, +infinity]
-#
-#         if depth == 0 or board.calc_valid_moves(current_symbol) == []:
-#             score = self.evaluate(board)
-#             return [-1, -1, score]
-#         for i in board.calc_valid_moves(current_symbol):
-#             copied_board = copy.deepcopy(board)
-#             x, y = i[0], i[1]
-#             if player == "MAX":
-#                 copied_board.make_move(self.symbol, i)
-#                 score = self.minimax(copied_board, depth - 1, "MIN")
-#             else:
-#                 copied_board.make_move(copied_board.get_opponent_symbol(self.symbol), i)
-#                 score = self.minimax(copied_board, depth - 1, "MAX")
-#             score[0], score[1] = x, y
-#
-#             if player == "MAX":
-#                 if score[2] > best[2]:
-#                     best = score  # max value
-#             else:
-#                 if score[2] < best[2]:
-#                     best = score  # min value
-#         return best
-#
-#     def get_move(self, board):
-#         if len(board.calc_valid_moves(self.symbol)) == 1:
-#             return board.calc_valid_moves(self.symbol)[0]
-#         move = self.minimax(board, 4, "MAX")
-#         return [move[0], move[1]]
