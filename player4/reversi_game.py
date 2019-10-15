@@ -3,7 +3,7 @@
 import copy
 from datetime import datetime
 from reversi_board import ReversiBoard
-from reversi_players import HumanPlayer, RandomComputerPlayer, GreedyComputerPlayer, minimaxPlayer
+from reversi_players import HumanPlayer, RandomComputerPlayer, GreedyComputerPlayer, MinimaxPlayer
 
 
 class ReversiGame:
