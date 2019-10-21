@@ -3,6 +3,7 @@
 import random
 import copy
 from math import inf
+from evaluations import spacesControlled, weightedEdges
 
 
 class HumanPlayer:
@@ -84,8 +85,12 @@ def minimax(board, depth, symbol, max):
     else:
         best = [-1, -1, inf]
 
-    if depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
+    if (not board.game_continues()):
+        return [-1, -1, endgameUtility(board, symbol)]
+
+    elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
         return [-1, -1, utility(board, symbol)]
+
 
     for move in board.calc_valid_moves(symbol):
         baseBoard = copy.deepcopy(board)
@@ -104,24 +109,14 @@ def minimax(board, depth, symbol, max):
     return best
 
 
-def basicUtility(board, symbol):
-    scores = board.calc_scores()
+def endgameUtility(board, symbol):
 
-    return scores[symbol]
+    return spacesControlled(board, symbol)
 
 
 def utility(board, symbol):
-    score = 0
-    for x in range(board.get_size()):
-        for y in range(board.get_size()):
-            if board.get_symbol_for_position((x, y)) == symbol:
-                if (x == 0 and y == 0) or (x == board.get_size() - 1 and y == board.get_size() - 1):
-                    score += 100
-                elif x == 0 or y == 0 or x == board.get_size() - 1 or y == board.get_size() - 1:
-                    score += 10
-                else:
-                    score += 1
-    return score
+
+    return weightedEdges(board, symbol)
 
 
 def flipSymbol(symbol):
