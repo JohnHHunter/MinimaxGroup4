@@ -3,7 +3,7 @@
 import random
 import copy
 from math import inf
-from evaluations import spacesControlled, weightedEdges
+from player4.evaluations import spacesControlled, weightedEdges
 
 
 class HumanPlayer:
@@ -77,11 +77,11 @@ class MinimaxPlayer:
 
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = minimax(board, 4, self.symbol, True)[:2]
+        answer = self.minimax(board, 4, self.symbol, True)[:2]
         return answer[0], answer[1]
 
     def check_transposition_table(self, board):
-        hash = hash_table(board)
+        hash = self.hash_table(board)
         if hash in self.transposition_table:
             return self.transposition_table.get(hash)
         else:
