@@ -71,10 +71,12 @@ class MinimaxPlayer:
     def __init__(self, symbol):
         self.symbol = symbol
 
+
     def get_move(self, board):
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
         answer = minimax(board, 4, self.symbol, True)[:2]
+
         return answer[0], answer[1]
 
 
@@ -129,3 +131,46 @@ def flipSymbol(symbol):
         return 'O'
     else:
         return 'X'
+
+# With the current implementation, minimax must be 'X'
+class MinimaxComputerPlayer:
+    def __init__(self, symbol):
+        self.symbol = symbol
+    def get_move(self, board):
+        move = minimax2(board, 4, True)[0]
+        return move
+
+
+def minimax2(board, depth, my_turn):
+    if my_turn:
+        best = [(0, 0), -999]
+        symbol = 'X'
+    else:  # opponents turn
+        best = [(0, 0), 999]
+        symbol = 'O'
+    # break case
+    if depth == 0 or not board.game_continues():
+        end_scores = board.calc_scores()
+        if end_scores['X'] > end_scores['O']:
+            return [None, 1]
+        if end_scores['X'] < end_scores['O']:
+            return [None, -1]
+        else:
+            # tie game
+            return [None, 0]
+    for move in board.calc_valid_moves(symbol):
+        # set up possible board
+        new_board = copy.deepcopy(board)
+        new_board.make_move(symbol, move)
+        score = minimax2(new_board, depth-1, not my_turn)
+        score[0] = move
+        if score[1] == 999 or score[1] == -999:
+             score[1] = -1
+        # compare the results of the possible board
+        if my_turn:
+            if score[1] > best[1]:
+                best = score
+        else:
+            if score[1] < best[1]:
+                best = score
+    return best
