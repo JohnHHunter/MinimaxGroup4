@@ -71,56 +71,63 @@ class MinimaxPlayer:
 
     def __init__(self, symbol):
         self.symbol = symbol
+        self.transposition_table = {}
 
     def get_move(self, board):
+
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
         answer = minimax(board, 4, self.symbol, True)[:2]
         return answer[0], answer[1]
 
-
-def minimax(board, depth, symbol, max):
-    if max:
-        best = [-1, -1, -inf]
-    else:
-        best = [-1, -1, inf]
-
-    if (not board.game_continues()):
-        return [-1, -1, endgameUtility(board, symbol)]
-
-    elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
-        return [-1, -1, utility(board, symbol)]
-
-
-    for move in board.calc_valid_moves(symbol):
-        baseBoard = copy.deepcopy(board)
-        baseBoard.make_move(symbol, move)
-        score = minimax(baseBoard, depth - 1, flipSymbol(symbol), not max)
-        score[0], score[1] = move[0], move[1]
-
-        if max:
-            if score[2] > best[2]:
-                best = score
-
+    def check_transposition_table(self, board):
+        hash = hash_table(board)
+        if hash in self.transposition_table:
+            return self.transposition_table.get(hash)
         else:
-            if score[2] < best[2]:
-                best = score
+            return None
 
-    return best
+    def minimax(self, board, depth, symbol, max_depth):
+        if max_depth:
+            best = [-1, -1, -inf]
+        else:
+            best = [-1, -1, inf]
 
+        if not board.game_continues():
+            return [-1, -1, self.endgameUtility(board, symbol)]
 
-def endgameUtility(board, symbol):
+        elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
+            return [-1, -1, self.utility(board, symbol)]
 
-    return spacesControlled(board, symbol)
+        for move in board.calc_valid_moves(symbol):
+            base_board = copy.deepcopy(board)
+            base_board.make_move(symbol, move)
+            score = self.minimax(base_board, depth - 1, self.flipSymbol(symbol), not max_depth)
+            score[0], score[1] = move[0], move[1]
 
+            if max_depth:
+                if score[2] > best[2]:
+                    best = score
 
-def utility(board, symbol):
+            else:
+                if score[2] < best[2]:
+                    best = score
 
-    return weightedEdges(board, symbol)
+        return best
 
+    def endgameUtility(self, board, symbol):
 
-def flipSymbol(symbol):
-    if symbol == 'X':
-        return 'O'
-    else:
-        return 'X'
+        return spacesControlled(board, symbol)
+
+    def utility(self, board, symbol):
+
+        return weightedEdges(board, symbol)
+
+    def flipSymbol(self, symbol):
+        if symbol == 'X':
+            return 'O'
+        else:
+            return 'X'
+
+    def hash_table(self, board):
+        return hash(board)
