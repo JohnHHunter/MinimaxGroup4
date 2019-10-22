@@ -67,7 +67,7 @@ class GreedyComputerPlayer:
         return best_move[2]
 
 
-class MinimaxPlayer:
+class MinimaxTranspositionPlayer:
 
     def __init__(self, symbol):
         self.symbol = symbol
