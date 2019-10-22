@@ -134,16 +134,16 @@ class MinimaxPlayer:
         return answer[0], answer[1]
 
 
-class MinimaxPlayer2:
+class NoOpponentCornersPlayer:
 
-    def __init__(self, symbol, weight):
+    def __init__(self, symbol):
         self.symbol = symbol
-        self.weight = weight
+
 
     def get_move(self, board):
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = minimax2(board, 2, self.symbol, True, self.weight)[:2]
+        answer = minimax2(board, 2, self.symbol, True, 0)[:2]
         return answer[0], answer[1]
 ## weight for testing corner thing, can be whatever otherwise
 
@@ -304,7 +304,7 @@ def utility(board, symbol):
 
 def utility2(board, symbol, weight):
 
-    return noOpponentCorners2(board, symbol)
+    return noOpponentCorners(board, symbol)
 
 
 def flipSymbol(symbol):
