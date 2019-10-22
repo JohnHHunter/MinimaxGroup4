@@ -3,7 +3,7 @@
 import copy
 from datetime import datetime
 from reversi_board import ReversiBoard
-from reversi_players import HumanPlayer, RandomComputerPlayer, GreedyComputerPlayer, MinimaxPlayer
+from reversi_players import HumanPlayer, RandomComputerPlayer, GreedyComputerPlayer, MinimaxPlayer, AlphaBetaPlayer
 
 
 class ReversiGame:
@@ -66,19 +66,21 @@ def print_scores(score_map):
     print()
 
 
-def compare_players(player1, player2, board_size=6, board_filename=None):
+def compare_players(player1, player2, board_size=8, board_filename=None):
     game_count_map = {player1.symbol: 0, player2.symbol: 0, "TIE": 0}
     time_elapsed_map = {player1.symbol: 0, player2.symbol: 0}
-    for i in range(1, 10):
+    for i in range(1, 11):
         if i % 1 == 0:
-            print(i, "games finished")
-
+            pass
+            # print(i, "games finished")
+        # game = ReversiGame(player1, player2, show_status=False, board_size=board_size, board_filename=board_filename)
         # swap who goes first
         if i % 2 == 0:
             game = ReversiGame(player1, player2, show_status=False, board_size=board_size, board_filename=board_filename)
+            # print('done')
         else:
             game = ReversiGame(player2, player1, show_status=False, board_size=board_size, board_filename=board_filename)
-
+            # print('done')
         game_count_map[game.calc_winner()] += 1
         decision_times = game.get_decision_times()
         for symbol in decision_times:
@@ -88,8 +90,15 @@ def compare_players(player1, player2, board_size=6, board_filename=None):
 
 
 def main():
-    # ReversiGame(MinimaxComputerPlayer("X"), HumanPlayer("O"))
-    compare_players(MinimaxPlayer("X"), RandomComputerPlayer("O"))
+    # ReversiGame(MinimaxPlayer("X"), AlphaBetaPlayer("O"))
+    compare_players(AlphaBetaPlayer("X"), RandomComputerPlayer("O"))
+    compare_players(RandomComputerPlayer("X"), AlphaBetaPlayer("O"), )
+    compare_players(AlphaBetaPlayer("X"),GreedyComputerPlayer("O"))
+    compare_players(GreedyComputerPlayer("X"),AlphaBetaPlayer("O"),)
+    compare_players(AlphaBetaPlayer("X"),MinimaxPlayer("O"))
+    compare_players(MinimaxPlayer("X"), AlphaBetaPlayer("O"))
+
+    # compare_players(AlphaBetaPlayer("X"), MinimaxPlayer("O"))
 
 
 if __name__ == "__main__":

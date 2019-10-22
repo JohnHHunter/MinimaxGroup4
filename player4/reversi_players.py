@@ -79,6 +79,61 @@ class MinimaxPlayer:
         return answer[0], answer[1]
 
 
+class AlphaBetaPlayer:
+    def __init__(self, symbol):
+        self.symbol = symbol
+
+    def get_move(self, board):
+        if len(board.calc_valid_moves(self.symbol)) == 1:
+            return board.calc_valid_moves(self.symbol)[0]
+        answer = alphabeta(board, 4, self.symbol)
+        # print(answer)
+        return answer[0], answer[1]
+
+
+def alphabeta(board, depth, symbol):
+
+    def max_value(board, alpha, beta, symbol, depth):
+        if not board.game_continues():
+            return [-1, -1, endgameUtility(board, symbol)]
+
+        elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
+            return [-1, -1, utility(board, symbol)]
+        best = [-1, -1, -inf]
+        for move in board.calc_valid_moves(symbol):
+            copied_board = copy.deepcopy(board)
+            copied_board.make_move(symbol, move)
+            score = min_value(copied_board, alpha, beta, flipSymbol(symbol), depth - 1)
+            if best[2] < score[2]:
+                best[2] = score[2]
+                best[0], best[1] = move[0], move[1]
+            if best[2] >= beta:
+                return best
+            alpha = max(alpha, best[2])
+        return best
+
+    def min_value(board, alpha, beta, symbol, depth):
+        if not board.game_continues():
+            return [-1, -1, endgameUtility(board, symbol)]
+        elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
+            return [-1, -1, utility(board, symbol)]
+
+        best = [-1, -1, inf]
+        for move in board.calc_valid_moves(symbol):
+            copied_board = copy.deepcopy(board)
+            copied_board.make_move(symbol, move)
+            score = max_value(copied_board, alpha, beta, flipSymbol(symbol), depth-1)
+            if best[2] > score[2]:
+                best[2] = score[2]
+                best[0], best[1] = move[0], move[1]
+            if best[2] <= alpha:
+                return best
+            beta = min(beta, best[2])
+        return best
+
+    return max_value(board, -inf, inf, symbol, depth)
+
+
 def minimax(board, depth, symbol, max):
     if max:
         best = [-1, -1, -inf]
