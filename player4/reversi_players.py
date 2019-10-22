@@ -80,12 +80,42 @@ class MinimaxPlayer:
         answer = self.minimax(board, 4, self.symbol, True)[:2]
         return answer[0], answer[1]
 
-    def check_transposition_table(self, board):
-        hash = self.hash_table(board)
-        if hash in self.transposition_table:
-            return self.transposition_table.get(hash)
-        else:
-            return None
+    def check_transposition_table(self, board, symbol):
+        # @TODO convert board to accessible 2d array
+        rot_original = []
+        for row in range(board.get_size()):
+            row_holder = []
+            rot_original.append(row_holder)
+            for column in range(board.get_size()):
+                rot_original[row][column] = board.get_symbol_for_position([row, column])
+
+        # check original board
+        rot_original_hash = hash(rot_original)
+        if rot_original_hash in self.transposition_table:
+            return self.transposition_table.get(rot_original_hash)
+
+        # rotate board 90 degrees
+        rot_90 = list(zip(*reversed(copy.deepcopy(rot_original))))
+        rot_90_hash = hash(rot_90)
+        if rot_90_hash in self.transposition_table:
+            return self.transposition_table.get(rot_90_hash)
+
+        # rotate board 180 degrees
+        rot_180 = list(zip(*reversed(copy.deepcopy(rot_90))))
+        rot_180_hash = hash(rot_180)
+        if rot_180_hash in self.transposition_table:
+            return self.transposition_table.get(rot_180_hash)
+
+        # rotate board 270 degrees
+        rot_270 = list(zip(*reversed(copy.deepcopy(rot_180))))
+        rot_270_hash = hash(rot_270)
+        if rot_270_hash in self.transposition_table:
+            return self.transposition_table.get(rot_270_hash)
+
+        # add rot_original to table (not found otherwise)
+        score = self.utility(board, symbol)
+        self.transposition_table[rot_original_hash] = score
+        return score
 
     def minimax(self, board, depth, symbol, max_depth):
         if max_depth:
@@ -97,7 +127,7 @@ class MinimaxPlayer:
             return [-1, -1, self.endgameUtility(board, symbol)]
 
         elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
-            return [-1, -1, self.utility(board, symbol)]
+            return [-1, -1, self.check_transposition_table(board, symbol)]
 
         for move in board.calc_valid_moves(symbol):
             base_board = copy.deepcopy(board)
@@ -128,6 +158,3 @@ class MinimaxPlayer:
             return 'O'
         else:
             return 'X'
-
-    def hash_table(self, board):
-        return hash(board)

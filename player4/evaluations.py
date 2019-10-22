@@ -17,6 +17,7 @@ def weightedEdges(board, symbol):
                     score += 1
     return score
 
+
 def triangleControl(board, symbol):
     score = 0
 
