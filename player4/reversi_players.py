@@ -82,34 +82,38 @@ class MinimaxPlayer:
 
     def check_transposition_table(self, board, symbol):
         # @TODO convert board to accessible 2d array
-        rot_original = []
-        for row in range(board.get_size()):
-            row_holder = []
-            rot_original.append(row_holder)
-            for column in range(board.get_size()):
-                rot_original[row][column] = board.get_symbol_for_position([row, column])
+        rot_original = board._board
+        # for row in range(board.get_size()):
+        #     row_holder = []
+        #     for column in range(board.get_size()):
+        #         rot_original[row].insert(column, board.get_symbol_for_position([row, column]))
+        #     rot_original.append(row_holder)
 
         # check original board
-        rot_original_hash = hash(rot_original)
+        rot_original_hash = hash(str(rot_original))
         if rot_original_hash in self.transposition_table:
+            print("Found match")
             return self.transposition_table.get(rot_original_hash)
 
         # rotate board 90 degrees
         rot_90 = list(zip(*reversed(copy.deepcopy(rot_original))))
-        rot_90_hash = hash(rot_90)
+        rot_90_hash = hash(str(rot_90))
         if rot_90_hash in self.transposition_table:
+            print("Found match")
             return self.transposition_table.get(rot_90_hash)
 
         # rotate board 180 degrees
         rot_180 = list(zip(*reversed(copy.deepcopy(rot_90))))
-        rot_180_hash = hash(rot_180)
+        rot_180_hash = hash(str(rot_180))
         if rot_180_hash in self.transposition_table:
+            print("Found match")
             return self.transposition_table.get(rot_180_hash)
 
         # rotate board 270 degrees
         rot_270 = list(zip(*reversed(copy.deepcopy(rot_180))))
-        rot_270_hash = hash(rot_270)
+        rot_270_hash = hash(str(rot_270))
         if rot_270_hash in self.transposition_table:
+            print("Found match")
             return self.transposition_table.get(rot_270_hash)
 
         # add rot_original to table (not found otherwise)
