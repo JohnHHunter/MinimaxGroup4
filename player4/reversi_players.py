@@ -3,7 +3,7 @@
 import random
 import copy
 from math import inf
-from evaluations import spacesControlled, weightedEdges, spacesControlledDifference, weightedEdgesDifference, justCorners, noOpponentCorners, noOpponentCorners2
+from player4.evaluations import *
 
 
 class HumanPlayer:
@@ -91,6 +91,90 @@ class MinimaxPlayer2:
         answer = minimax2(board, 2, self.symbol, True, self.weight)[:2]
         return answer[0], answer[1]
 ## weight for testing corner thing, can be whatever otherwise
+
+class MinimaxTranspositionPlayer:
+
+    def __init__(self, symbol):
+        self.symbol = symbol
+        self.transposition_table = {}
+
+    def get_move(self, board):
+
+        if len(board.calc_valid_moves(self.symbol)) == 1:
+            return board.calc_valid_moves(self.symbol)[0]
+        answer = self.minimax(board, 4, self.symbol, True)[:2]
+        return answer[0], answer[1]
+
+    def check_transposition_table(self, board, symbol):
+        # @TODO convert board to accessible 2d array
+        rot_original = board._board
+
+        # check original board
+        rot_original_hash = hash(str(rot_original))
+        if rot_original_hash in self.transposition_table:
+            return self.transposition_table.get(rot_original_hash)
+
+        # rotate board 90 degrees
+        rot_90 = list(zip(*reversed(copy.deepcopy(rot_original))))
+        rot_90_hash = hash(str(rot_90))
+        if rot_90_hash in self.transposition_table:
+            return self.transposition_table.get(rot_90_hash)
+
+        # rotate board 180 degrees
+        rot_180 = list(zip(*reversed(copy.deepcopy(rot_90))))
+        rot_180_hash = hash(str(rot_180))
+        if rot_180_hash in self.transposition_table:
+            return self.transposition_table.get(rot_180_hash)
+
+        # rotate board 270 degrees
+        rot_270 = list(zip(*reversed(copy.deepcopy(rot_180))))
+        rot_270_hash = hash(str(rot_270))
+        if rot_270_hash in self.transposition_table:
+            return self.transposition_table.get(rot_270_hash)
+
+        # add rot_original to table (not found otherwise)
+        score = self.utility(board, symbol)
+        self.transposition_table[rot_original_hash] = score
+        return score
+
+    def minimax(self, board, depth, symbol, max_depth):
+        if max_depth:
+            best = [-1, -1, -inf]
+        else:
+            best = [-1, -1, inf]
+
+        if not board.game_continues():
+            return [-1, -1, self.endgameUtility(board, symbol)]
+        elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
+            return [-1, -1, self.check_transposition_table(board, symbol)]
+
+        for move in board.calc_valid_moves(symbol):
+            base_board = copy.deepcopy(board)
+            base_board.make_move(symbol, move)
+            score = self.minimax(base_board, depth - 1, self.flipSymbol(symbol), not max_depth)
+            score[0], score[1] = move[0], move[1]
+
+            if max_depth:
+                if score[2] > best[2]:
+                    best = score
+
+            else:
+                if score[2] < best[2]:
+                    best = score
+
+        return best
+
+    def endgameUtility(self, board, symbol):
+        return spacesControlled(board, symbol)
+
+    def utility(self, board, symbol):
+        return noOpponentCorners(board, symbol)
+
+    def flipSymbol(self, symbol):
+        if symbol == 'X':
+            return 'O'
+        else:
+            return 'X'
 
 def minimax2(board, depth, symbol, max, weight):
     if max:

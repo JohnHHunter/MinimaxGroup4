@@ -2,8 +2,8 @@
 
 import copy
 from datetime import datetime
-from reversi_board import ReversiBoard
-from reversi_players import HumanPlayer, RandomComputerPlayer, GreedyComputerPlayer, MinimaxPlayer, MinimaxPlayer2
+from player4.reversi_board import ReversiBoard
+from player4.reversi_players import *
 
 
 class ReversiGame:
@@ -70,7 +70,7 @@ def compare_players(player1, player2, board_size=8, board_filename=None):
     game_count_map = {player1.symbol: 0, player2.symbol: 0, "TIE": 0}
     time_elapsed_map = {player1.symbol: 0, player2.symbol: 0}
     for i in range(1, 11):
-        if i % 100 == 0:
+        if i % 1 == 0:
             print(i, "games finished")
 
         # swap who goes first
@@ -91,7 +91,7 @@ def main():
     #ReversiGame(MinimaxPlayer("X"), HumanPlayer("O"))
 
 
-    compare_players(MinimaxPlayer("X"), MinimaxPlayer2("O", 1))
+    compare_players(MinimaxTranspositionPlayer("X"), MinimaxPlayer("O"))
 
 
 
