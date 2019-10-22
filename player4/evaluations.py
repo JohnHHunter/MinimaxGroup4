@@ -42,27 +42,29 @@ def weightedEdgesDifference(board, symbol, weight):
 
 #This method works best, beats minimax with weighted edges as well as minimax with spaces controlled.
 #Beat random computer player 807 times out of 1000, lost 170 and tied 23
+# def noOpponentCorners(board, symbol):
+#     score = 0
+#     for x in range(board.get_size()):
+#         for y in range(board.get_size()):
+#             if board.get_symbol_for_position((x, y)) == symbol:
+#                     score += 1
+#             elif board.get_symbol_for_position((x, y)) == changeSymbol(symbol):
+#                 if (x == 0 and y == 0) or (x == board.get_size() - 1 and y == board.get_size() - 1):
+#                     return 0
+#
+#     return score
+
 def noOpponentCorners(board, symbol):
     score = 0
+    scale = board.get_size() * board.get_size()
+    otherSymbol = changeSymbol(symbol)
     for x in range(board.get_size()):
         for y in range(board.get_size()):
             if board.get_symbol_for_position((x, y)) == symbol:
                     score += 1
-            elif board.get_symbol_for_position((x, y)) == changeSymbol(symbol):
+            elif board.get_symbol_for_position((x, y)) == otherSymbol:
                 if (x == 0 and y == 0) or (x == board.get_size() - 1 and y == board.get_size() - 1):
-                    return 0
-
-    return score
-
-def noOpponentCorners2(board, symbol):
-    score = 0
-    for x in range(board.get_size()):
-        for y in range(board.get_size()):
-            if board.get_symbol_for_position((x, y)) == symbol:
-                    score += 1
-            elif board.get_symbol_for_position((x, y)) == changeSymbol(symbol):
-                if (x == 0 and y == 0) or (x == board.get_size() - 1 and y == board.get_size() - 1):
-                    score -= (board.get_size() * board.get_size())
+                    score -= scale
 
     return score
 
