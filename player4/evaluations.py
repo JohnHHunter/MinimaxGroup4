@@ -42,7 +42,7 @@ def weightedEdgesDifference(board, symbol, weight):
 
 #This method works best, beats minimax with weighted edges as well as minimax with spaces controlled.
 #Beat random computer player 807 times out of 1000, lost 170 and tied 23
-def noOpponentCorners(board, symbol, weight):
+def noOpponentCorners(board, symbol):
     score = 0
     for x in range(board.get_size()):
         for y in range(board.get_size()):

@@ -159,7 +159,7 @@ def endgameUtility(board, symbol):
 
 def utility(board, symbol):
 
-    return weightedEdges(board, symbol, 3)
+    return noOpponentCorners(board, symbol)
 
 
 

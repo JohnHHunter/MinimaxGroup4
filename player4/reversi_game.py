@@ -88,10 +88,10 @@ def compare_players(player1, player2, board_size=8, board_filename=None):
 
 
 def main():
-    # ReversiGame(MinimaxComputerPlayer("X"), HumanPlayer("O"))
+    ReversiGame(MinimaxPlayer("X"), HumanPlayer("O"))
 
 
-    compare_players(RandomComputerPlayer("X"), MinimaxPlayer2("O", 1))
+    #compare_players(RandomComputerPlayer("X"), MinimaxPlayer2("O", 1))
 
 
 
