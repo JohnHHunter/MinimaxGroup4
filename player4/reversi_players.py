@@ -3,7 +3,7 @@
 import random
 import copy
 from math import inf
-from evaluations import spacesControlled, weightedEdges, spacesControlledDifference, weightedEdgesDifference, justCorners, noOpponentCorners
+from evaluations import spacesControlled, weightedEdges, spacesControlledDifference, weightedEdgesDifference, justCorners, noOpponentCorners, noOpponentCorners2
 
 
 class HumanPlayer:
@@ -165,7 +165,7 @@ def utility(board, symbol):
 
 def utility2(board, symbol, weight):
 
-    return noOpponentCorners(board, symbol, weight)
+    return noOpponentCorners2(board, symbol)
 
 
 def flipSymbol(symbol):
