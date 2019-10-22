@@ -3,7 +3,7 @@
 import random
 import copy
 from math import inf
-from evaluations import spacesControlled, weightedEdges
+from evaluations import spacesControlled, weightedEdges, spacesControlledDifference, weightedEdgesDifference, justCorners, noOpponentCorners
 
 
 class HumanPlayer:
@@ -75,8 +75,51 @@ class MinimaxPlayer:
     def get_move(self, board):
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = minimax(board, 4, self.symbol, True)[:2]
+        answer = minimax(board, 2, self.symbol, True)[:2]
         return answer[0], answer[1]
+
+
+class MinimaxPlayer2:
+
+    def __init__(self, symbol, weight):
+        self.symbol = symbol
+        self.weight = weight
+
+    def get_move(self, board):
+        if len(board.calc_valid_moves(self.symbol)) == 1:
+            return board.calc_valid_moves(self.symbol)[0]
+        answer = minimax2(board, 2, self.symbol, True, self.weight)[:2]
+        return answer[0], answer[1]
+## weight for testing corner thing, can be whatever otherwise
+
+def minimax2(board, depth, symbol, max, weight):
+    if max:
+        best = [-1, -1, -inf]
+    else:
+        best = [-1, -1, inf]
+
+    if (not board.game_continues()):
+        return [-1, -1, endgameUtility(board, symbol)]
+
+    elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
+        return [-1, -1, utility2(board, symbol, weight)]
+
+
+    for move in board.calc_valid_moves(symbol):
+        baseBoard = copy.deepcopy(board)
+        baseBoard.make_move(symbol, move)
+        score = minimax2(baseBoard, depth - 1, flipSymbol(symbol), not max, weight)
+        score[0], score[1] = move[0], move[1]
+
+        if max:
+            if score[2] > best[2]:
+                best = score
+
+        else:
+            if score[2] < best[2]:
+                best = score
+
+    return best
 
 
 def minimax(board, depth, symbol, max):
@@ -116,7 +159,13 @@ def endgameUtility(board, symbol):
 
 def utility(board, symbol):
 
-    return weightedEdges(board, symbol)
+    return weightedEdges(board, symbol, 3)
+
+
+
+def utility2(board, symbol, weight):
+
+    return noOpponentCorners(board, symbol, weight)
 
 
 def flipSymbol(symbol):
