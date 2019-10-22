@@ -3,7 +3,7 @@
 import random
 import copy
 from math import inf
-from player4.evaluations import spacesControlled, weightedEdges
+from player4.evaluations import *
 
 
 class HumanPlayer:
@@ -83,11 +83,6 @@ class MinimaxTranspositionPlayer:
     def check_transposition_table(self, board, symbol):
         # @TODO convert board to accessible 2d array
         rot_original = board._board
-        # for row in range(board.get_size()):
-        #     row_holder = []
-        #     for column in range(board.get_size()):
-        #         rot_original[row].insert(column, board.get_symbol_for_position([row, column]))
-        #     rot_original.append(row_holder)
 
         # check original board
         rot_original_hash = hash(str(rot_original))
@@ -125,7 +120,6 @@ class MinimaxTranspositionPlayer:
 
         if not board.game_continues():
             return [-1, -1, self.endgameUtility(board, symbol)]
-
         elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
             return [-1, -1, self.check_transposition_table(board, symbol)]
 
@@ -146,15 +140,28 @@ class MinimaxTranspositionPlayer:
         return best
 
     def endgameUtility(self, board, symbol):
-
         return spacesControlled(board, symbol)
 
     def utility(self, board, symbol):
-
-        return weightedEdges(board, symbol)
+        return noOpponentCorners(board, symbol)
 
     def flipSymbol(self, symbol):
         if symbol == 'X':
             return 'O'
         else:
             return 'X'
+
+
+def endgameUtility(board, symbol):
+    return spacesControlled(board, symbol)
+
+
+def utility(board, symbol):
+    return noOpponentCorners(board, symbol)
+
+
+def flipSymbol(symbol):
+    if symbol == 'X':
+        return 'O'
+    else:
+        return 'X'
