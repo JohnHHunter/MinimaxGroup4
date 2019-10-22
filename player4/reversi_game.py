@@ -92,7 +92,7 @@ def main():
 
 
     compare_players(MinimaxTranspositionPlayer("X"), MinimaxPlayer("O"))
-
+    compare_players(AlphaBetaPlayer("X"), MinimaxPlayer("O"))
 
 
 if __name__ == "__main__":
