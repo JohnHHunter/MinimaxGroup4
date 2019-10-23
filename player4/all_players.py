@@ -1,8 +1,10 @@
+from player4.reversi_players import *
+
 def get_default_player(symbol):
     """
     :returns: a default minimax player that can operate successfully on a given 8x8 board
     """
-    pass
+    return MinimaxPlayer
 
 
 def get_player_a(symbol):
@@ -11,7 +13,7 @@ def get_player_a(symbol):
     :enchancement: Advanced Evaluation Functions
     :returns: an enhanced minimax player that can operate successfully on a given 8x8 board
     """
-    pass
+    return NoOpponentCornersPlayer
 
 
 def get_player_b(symbol):
@@ -20,7 +22,7 @@ def get_player_b(symbol):
     :enchancement:
     :returns: an enhanced minimax player that can operate successfully on a given 8x8 board
     """
-    pass
+    return AlphaBetaPlayer
 
 
 def get_player_c(symbol):
@@ -29,7 +31,7 @@ def get_player_c(symbol):
     :enchancement: Transposition Table
     :returns: an enhanced minimax player that can operate successfully on a given 8x8 board
     """
-    pass
+    return MinimaxTranspositionPlayer
 
 
 def get_player_d(symbol):
@@ -45,4 +47,4 @@ def get_combined_player(symbol):
     """
     :returns: the best combination of the minimax enhancements that your team can create
     """
-    pass
+    return CombinedPlayer
