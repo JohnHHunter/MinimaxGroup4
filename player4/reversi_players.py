@@ -329,13 +329,17 @@ class CombinedPlayer:
     def __init__(self, symbol):
         self.symbol = symbol
         self.transposition_table = {}
+        self.moveMade = False
 
     def get_move(self, board):
         #Sneaky move is the next 4 lines, comment out if testing
-        scores = board.calc_scores()
-        combined = scores["X"] + scores["O"]
-        if (combined == 4):
-            time.sleep(3)
+        if not self.moveMade:
+            scores = board.calc_scores()
+            combined = scores["X"] + scores["O"]
+            if (combined == 4):
+                time.sleep(3)
+            else:
+                self.moveMade = True
 
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
