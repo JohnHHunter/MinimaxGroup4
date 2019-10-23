@@ -37,10 +37,10 @@ def get_player_c(symbol):
 def get_player_d(symbol):
     """
     :author: John Hunter
-    :enchancement: ProbCut (TBD)
+    :enchancement: Incoperates random moves to take down deterministic foes
     :returns: an enhanced minimax player that can operate successfully on a given 8x8 board
     """
-    pass
+    return MinimaxRandomPlayer
 
 
 def get_combined_player(symbol):
