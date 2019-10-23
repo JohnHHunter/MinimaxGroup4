@@ -66,6 +66,7 @@ class GreedyComputerPlayer:
 
         return best_move[2]
 
+
 class AlphaBetaPlayer:
     def __init__(self, symbol):
         self.symbol = symbol
@@ -79,7 +80,6 @@ class AlphaBetaPlayer:
 
 
 def AlphaBeta(board, depth, symbol):
-
     def max_value(board, alpha, beta, symbol, depth):
         if not board.game_continues():
             return [-1, -1, endgameUtility(board, symbol)]
@@ -109,7 +109,7 @@ def AlphaBeta(board, depth, symbol):
         for move in board.calc_valid_moves(symbol):
             copied_board = copy.deepcopy(board)
             copied_board.make_move(symbol, move)
-            score = max_value(copied_board, alpha, beta, flipSymbol(symbol), depth-1)
+            score = max_value(copied_board, alpha, beta, flipSymbol(symbol), depth - 1)
             if best[2] > score[2]:
                 best[2] = score[2]
                 best[0], best[1] = move[0], move[1]
@@ -119,7 +119,6 @@ def AlphaBeta(board, depth, symbol):
         return best
 
     return max_value(board, -inf, inf, symbol, depth)
-
 
 
 class MinimaxPlayer:
@@ -139,12 +138,13 @@ class NoOpponentCornersPlayer:
     def __init__(self, symbol):
         self.symbol = symbol
 
-
     def get_move(self, board):
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
         answer = minimax2(board, 2, self.symbol, True, 0)[:2]
         return answer[0], answer[1]
+
+
 ## weight for testing corner thing, can be whatever otherwise
 
 class MinimaxTranspositionPlayer:
@@ -161,7 +161,7 @@ class MinimaxTranspositionPlayer:
         return answer[0], answer[1]
 
     def check_transposition_table(self, board, symbol):
-        # @TODO convert board to accessible 2d array
+        # @TODO should in statement actually be .get attempt? O(N) vs O(1)
         rot_original = board._board
 
         # check original board
@@ -231,6 +231,7 @@ class MinimaxTranspositionPlayer:
         else:
             return 'X'
 
+
 def minimax2(board, depth, symbol, max, weight):
     if max:
         best = [-1, -1, -inf]
@@ -242,7 +243,6 @@ def minimax2(board, depth, symbol, max, weight):
 
     elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
         return [-1, -1, utility2(board, symbol, weight)]
-
 
     for move in board.calc_valid_moves(symbol):
         baseBoard = copy.deepcopy(board)
@@ -273,7 +273,6 @@ def minimax(board, depth, symbol, max):
     elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
         return [-1, -1, utility(board, symbol)]
 
-
     for move in board.calc_valid_moves(symbol):
         baseBoard = copy.deepcopy(board)
         baseBoard.make_move(symbol, move)
@@ -292,18 +291,14 @@ def minimax(board, depth, symbol, max):
 
 
 def endgameUtility(board, symbol):
-
     return spacesControlled(board, symbol)
 
 
 def utility(board, symbol):
-
     return noOpponentCorners(board, symbol)
 
 
-
 def utility2(board, symbol, weight):
-
     return noOpponentCorners(board, symbol)
 
 
