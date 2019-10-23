@@ -67,6 +67,20 @@ class GreedyComputerPlayer:
         return best_move[2]
 
 
+class MinimaxRandomPlayer:
+    def __init__(self, symbol):
+        self.symbol = symbol
+        random.seed(112342)
+
+    def get_move(self, board):
+        if random.randint(1, 3) is 1:
+            return random.choice(board.calc_valid_moves(self.symbol))
+        if len(board.calc_valid_moves(self.symbol)) == 1:
+            return board.calc_valid_moves(self.symbol)[0]
+        answer = minimax(board, 2, self.symbol, True)[:2]
+        return answer[0], answer[1]
+
+
 class AlphaBetaPlayer:
     def __init__(self, symbol):
         self.symbol = symbol

@@ -68,8 +68,8 @@ def print_scores(score_map):
 def compare_players(player1, player2, board_size=8, board_filename=None):
     game_count_map = {player1.symbol: 0, player2.symbol: 0, "TIE": 0}
     time_elapsed_map = {player1.symbol: 0, player2.symbol: 0}
-    for i in range(1, 11):
-        if i % 1 == 0:
+    for i in range(1, 100):
+        if i % 10 == 0:
             print(i, "games finished")
 
         # swap who goes first
@@ -90,8 +90,7 @@ def main():
     #ReversiGame(MinimaxPlayer("X"), HumanPlayer("O"))
 
 
-    compare_players(MinimaxTranspositionPlayer("X"), MinimaxPlayer("O"))
-    compare_players(AlphaBetaPlayer("X"), MinimaxPlayer("O"))
+    compare_players(MinimaxPlayer("X"), MinimaxRandomPlayer("O"))
 
 
 if __name__ == "__main__":
