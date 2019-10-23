@@ -4,6 +4,7 @@ import random
 import copy
 from math import inf
 from player4.evaluations import *
+import time
 
 
 class HumanPlayer:
@@ -330,6 +331,12 @@ class CombinedPlayer:
         self.transposition_table = {}
 
     def get_move(self, board):
+        #Sneaky move is the next 4 lines, comment out if testing
+        scores = board.calc_scores()
+        combined = scores["X"] + scores["O"]
+        if (combined == 4):
+            time.sleep(3)
+
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
         answer = self.AlphaBeta2(board, 4, self.symbol)
