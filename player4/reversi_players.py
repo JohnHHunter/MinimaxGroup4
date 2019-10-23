@@ -145,7 +145,7 @@ class NoOpponentCornersPlayer:
         return answer[0], answer[1]
 
 
-## weight for testing corner thing, can be whatever otherwise
+# weight for testing corner thing, can be whatever otherwise
 
 class MinimaxTranspositionPlayer:
 

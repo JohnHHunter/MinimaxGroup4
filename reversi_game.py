@@ -1,8 +1,7 @@
 # Written by Toby Dragon
 
-import copy
 from datetime import datetime
-from player4.reversi_board import ReversiBoard
+from reversi_board import ReversiBoard
 from player4.reversi_players import *
 
 
