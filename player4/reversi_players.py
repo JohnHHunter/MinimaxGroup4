@@ -102,7 +102,10 @@ def AlphaBeta(board, depth, symbol):
         elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
             return [-1, -1, utility(board, symbol)]
         best = [-1, -1, -inf]
-        for move in board.calc_valid_moves(symbol):
+
+        moves = board.calc_valid_moves(symbol)
+        random.shuffle(moves)
+        for move in moves:
             copied_board = copy.deepcopy(board)
             copied_board.make_move(symbol, move)
             score = min_value(copied_board, alpha, beta, flipSymbol(symbol), depth - 1)
@@ -121,7 +124,9 @@ def AlphaBeta(board, depth, symbol):
             return [-1, -1, utility(board, symbol)]
 
         best = [-1, -1, inf]
-        for move in board.calc_valid_moves(symbol):
+        moves = board.calc_valid_moves(symbol)
+        random.shuffle(moves)
+        for move in moves:
             copied_board = copy.deepcopy(board)
             copied_board.make_move(symbol, move)
             score = max_value(copied_board, alpha, beta, flipSymbol(symbol), depth - 1)
@@ -144,7 +149,7 @@ class MinimaxPlayer:
     def get_move(self, board):
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = minimax(board, 2, self.symbol, True)[:2]
+        answer = minimax(board, 4, self.symbol, True)[:2]
         return answer[0], answer[1]
 
 
@@ -217,8 +222,9 @@ class MinimaxTranspositionPlayer:
             return [-1, -1, self.endgameUtility(board, symbol)]
         elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
             return [-1, -1, self.check_transposition_table(board, symbol)]
-
-        for move in board.calc_valid_moves(symbol):
+        moves = board.calc_valid_moves(symbol)
+        random.shuffle(moves)
+        for move in moves:
             base_board = copy.deepcopy(board)
             base_board.make_move(symbol, move)
             score = self.minimax(base_board, depth - 1, self.flipSymbol(symbol), not max_depth)
@@ -287,8 +293,9 @@ def minimax(board, depth, symbol, max):
 
     elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
         return [-1, -1, utility(board, symbol)]
-
-    for move in board.calc_valid_moves(symbol):
+    moves = board.calc_valid_moves(symbol)
+    random.shuffle(moves)
+    for move in moves:
         baseBoard = copy.deepcopy(board)
         baseBoard.make_move(symbol, move)
         score = minimax(baseBoard, depth - 1, flipSymbol(symbol), not max)
@@ -332,14 +339,14 @@ class CombinedPlayer:
         self.moveMade = False
 
     def get_move(self, board):
-        #Sneaky move is the next 4 lines, comment out if testing
-        if not self.moveMade:
-            scores = board.calc_scores()
-            combined = scores["X"] + scores["O"]
-            if (combined == 4):
-                time.sleep(3)
-            else:
-                self.moveMade = True
+        # #Sneaky move is the next 4 lines, comment out if testing
+        # if not self.moveMade:
+        #     scores = board.calc_scores()
+        #     combined = scores["X"] + scores["O"]
+        #     if (combined == 4):
+        #         time.sleep(3)
+        #     else:
+        #         self.moveMade = True
 
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
