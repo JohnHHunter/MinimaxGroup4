@@ -4,7 +4,7 @@ def get_default_player(symbol):
     """
     :returns: a default minimax player that can operate successfully on a given 8x8 board
     """
-    return MinimaxPlayer
+    return MinimaxPlayer(symbol)
 
 
 def get_player_a(symbol):
@@ -13,7 +13,7 @@ def get_player_a(symbol):
     :enchancement: Advanced Evaluation Functions
     :returns: an enhanced minimax player that can operate successfully on a given 8x8 board
     """
-    return NoOpponentCornersPlayer
+    return NoOpponentCornersPlayer(symbol)
 
 
 def get_player_b(symbol):
@@ -22,7 +22,7 @@ def get_player_b(symbol):
     :enchancement:
     :returns: an enhanced minimax player that can operate successfully on a given 8x8 board
     """
-    return AlphaBetaPlayer
+    return AlphaBetaPlayer(symbol)
 
 
 def get_player_c(symbol):
@@ -31,7 +31,7 @@ def get_player_c(symbol):
     :enchancement: Transposition Table
     :returns: an enhanced minimax player that can operate successfully on a given 8x8 board
     """
-    return MinimaxTranspositionPlayer
+    return MinimaxTranspositionPlayer(symbol)
 
 
 def get_player_d(symbol):
@@ -40,11 +40,11 @@ def get_player_d(symbol):
     :enchancement: Incoperates random moves to take down deterministic foes
     :returns: an enhanced minimax player that can operate successfully on a given 8x8 board
     """
-    return MinimaxRandomPlayer
+    return MinimaxRandomPlayer(symbol)
 
 
 def get_combined_player(symbol):
     """
     :returns: the best combination of the minimax enhancements that your team can create
     """
-    return CombinedPlayer
+    return CombinedPlayer(symbol)
