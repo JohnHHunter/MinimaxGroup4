@@ -89,7 +89,7 @@ class AlphaBetaPlayer:
     def get_move(self, board):
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = AlphaBeta(board, 4, self.symbol)
+        answer = AlphaBeta(board, 2, self.symbol)
         # print(answer)
         return answer[0], answer[1]
 

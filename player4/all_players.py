@@ -1,5 +1,6 @@
 from player4.reversi_players import *
 
+
 def get_default_player(symbol):
     """
     :returns: a default minimax player that can operate successfully on a given 8x8 board
