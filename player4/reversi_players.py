@@ -67,7 +67,7 @@ class GreedyComputerPlayer:
 
         return best_move[2]
 
-    
+
 class MinimaxRandomPlayer:
     def __init__(self, symbol):
         self.symbol = symbol
@@ -81,7 +81,7 @@ class MinimaxRandomPlayer:
         answer = minimax(board, 2, self.symbol, True)[:2]
         return answer[0], answer[1]
 
-    
+
 class AlphaBetaPlayer:
     def __init__(self, symbol):
         self.symbol = symbol
@@ -89,7 +89,7 @@ class AlphaBetaPlayer:
     def get_move(self, board):
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = AlphaBeta(board, 2, self.symbol)
+        answer = AlphaBeta(board, 4, self.symbol)
         # print(answer)
         return answer[0], answer[1]
 
@@ -331,11 +331,11 @@ class CombinedPlayer:
         self.transposition_table = {}
 
     def get_move(self, board):
-        #Sneaky move is the next 4 lines, comment out if testing
-        scores = board.calc_scores()
-        combined = scores["X"] + scores["O"]
-        if (combined == 4):
-            time.sleep(3)
+        # Sneaky move is the next 4 lines, comment out if testing
+        # scores = board.calc_scores()
+        # combined = scores["X"] + scores["O"]
+        # if (combined == 4):
+        #     time.sleep(3)
 
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
@@ -418,3 +418,57 @@ class CombinedPlayer:
 
     def utility(self, board, symbol):
         return noOpponentCorners(board, symbol)
+
+
+class ProbCutPlayer:
+    def __init__(self, symbol):
+        self.symbol = symbol
+
+    def get_move(self, board):
+        if len(board.calc_valid_moves(self.symbol)) == 1:
+            return board.calc_valid_moves(self.symbol)[0]
+        answer = AlphaBetaProb(board, 4, self.symbol)
+        # print(answer)
+        return answer[0], answer[1]
+
+
+def AlphaBetaProb(board, depth, symbol):
+    def max_value(board, alpha, beta, symbol, depth):
+        if not board.game_continues():
+            return [-1, -1, endgameUtility(board, symbol)]
+
+        elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
+            return [-1, -1, utility(board, symbol)]
+        best = [-1, -1, -inf]
+        for move in board.calc_valid_moves(symbol):
+            copied_board = copy.deepcopy(board)
+            copied_board.make_move(symbol, move)
+            score = min_value(copied_board, alpha, beta, flipSymbol(symbol), depth - 1)
+            if best[2] < score[2]:
+                best[2] = score[2]
+                best[0], best[1] = move[0], move[1]
+            if best[2] >= beta:
+                return best
+            alpha = max(alpha, best[2])
+        return best
+
+    def min_value(board, alpha, beta, symbol, depth):
+        if not board.game_continues():
+            return [-1, -1, endgameUtility(board, symbol)]
+        elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
+            return [-1, -1, utility(board, symbol)]
+
+        best = [-1, -1, inf]
+        for move in board.calc_valid_moves(symbol):
+            copied_board = copy.deepcopy(board)
+            copied_board.make_move(symbol, move)
+            score = max_value(copied_board, alpha, beta, flipSymbol(symbol), depth - 1)
+            if best[2] > score[2]:
+                best[2] = score[2]
+                best[0], best[1] = move[0], move[1]
+            if best[2] <= alpha:
+                return best
+            beta = min(beta, best[2])
+        return best
+
+    return max_value(board, -inf, inf, symbol, depth)

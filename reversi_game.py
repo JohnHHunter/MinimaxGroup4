@@ -88,11 +88,16 @@ def compare_players(player1, player2, board_size=8, board_filename=None):
 
 def main():
     # ReversiGame(MinimaxPlayer("X"), HumanPlayer("O"))
-    compare_players(MinimaxPlayer("X"), MinimaxPlayer("O"))
+    # compare_players(MinimaxPlayer("X"), MinimaxPlayer("O"))
     # compare_players(MinimaxPlayer("X"), RandomComputerPlayer("O"))
     # compare_players(RandomComputerPlayer("X"), MinimaxPlayer("O"))
-    compare_players(AlphaBetaPlayer("X"), MinimaxPlayer("O"))
-    compare_players(MinimaxPlayer("X"), AlphaBetaPlayer("O"))
+    # compare_players(AlphaBetaPlayer("X"), MinimaxPlayer("O"))
+    # compare_players(MinimaxPlayer("X"), AlphaBetaPlayer("O"))
+    # compare_players(CombinedPlayer("X"), MinimaxPlayer("O"))
+    # compare_players(MinimaxPlayer("X"), CombinedPlayer("O"))
+    compare_players(AlphaBetaPlayer("X"), CombinedPlayer("O"))
+    compare_players(CombinedPlayer("X"), AlphaBetaPlayer("O"))
+
 
 
 if __name__ == "__main__":
