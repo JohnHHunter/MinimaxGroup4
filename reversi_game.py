@@ -70,6 +70,7 @@ def compare_players(player1, player2, board_size=6, board_filename=None):
     time_elapsed_map = {player1.symbol: 0, player2.symbol: 0}
     for i in range(1, 11):
         if i % 1 == 0:
+            # pass
             print(i, "games finished")
 
         # swap who goes first
@@ -87,11 +88,20 @@ def compare_players(player1, player2, board_size=6, board_filename=None):
 
 
 def main():
-    #ReversiGame(MinimaxPlayer("X"), HumanPlayer("O"))
-
-     compare_players(AlphaBetaPlayer("X"), MinimaxTranspositionPlayer("O"))
-    # compare_players(MinimaxTranspositionPlayer("X"), MinimaxPlayer("O"))
+    # ReversiGame(MinimaxPlayer("X"), AlphaBetaPlayer("O"))
+    compare_players(MinimaxPlayer("X"), AlphaBetaPlayer("O"))
     # compare_players(AlphaBetaPlayer("X"), MinimaxPlayer("O"))
+    # compare_players(MinimaxPlayer("X"), AlphaBetaPlayer("O"))
+    # compare_players(MinimaxTranspositionPlayer("X"), MinimaxPlayer("O"))
+    # compare_players(MinimaxPlayer("X"), MinimaxTranspositionPlayer("O"))
+    # compare_players(AlphaBetaPlayer("X"), MinimaxTranspositionPlayer("O"))
+    # compare_players(MinimaxTranspositionPlayer("X"), AlphaBetaPlayer("O"))
+    # compare_players(MinimaxPlayer("X"), CombinedPlayer("O"))
+    # compare_players(CombinedPlayer("X"), MinimaxPlayer("O"))
+    # compare_players(MinimaxTranspositionPlayer("X"), CombinedPlayer("O"))
+    # compare_players(CombinedPlayer("X"), MinimaxTranspositionPlayer("O"))
+    # compare_players(AlphaBetaPlayer("X"), CombinedPlayer("O"))
+    # compare_players(CombinedPlayer("X"), AlphaBetaPlayer("O"))
 
 
 if __name__ == "__main__":
