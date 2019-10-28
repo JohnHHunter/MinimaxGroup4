@@ -74,11 +74,11 @@ class MinimaxRandomPlayer:
         random.seed(112342)
 
     def get_move(self, board):
-        if random.randint(1, 3) is 1:
+        if random.randint(1, 8) is 1:
             return random.choice(board.calc_valid_moves(self.symbol))
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = minimax(board, 4, self.symbol, True)[:2]
+        answer = minimax(board, 2, self.symbol, True)[:2]
         return answer[0], answer[1]
 
     
@@ -89,7 +89,7 @@ class AlphaBetaPlayer:
     def get_move(self, board):
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = AlphaBeta(board, 4, self.symbol)
+        answer = AlphaBeta(board, 2, self.symbol)
         # print(answer)
         return answer[0], answer[1]
 
@@ -147,7 +147,7 @@ class MinimaxPlayer:
     def get_move(self, board):
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = minimax(board, 4, self.symbol, True)[:2]
+        answer = minimax(board, 2, self.symbol, True)[:2]
         return answer[0], answer[1]
 
 
@@ -157,9 +157,15 @@ class NoOpponentCornersPlayer:
         self.symbol = symbol
 
     def get_move(self, board):
+        start = time.time()
+
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = minimax2(board, 4, self.symbol, True, 0)[:2]
+        answer = minimax2(board, 2, self.symbol, True)[:2]
+        end = time.time()
+        dif = end - start
+        if (dif > 2.7):
+            print("Time limit reached, time = " + dif)
         return answer[0], answer[1]
 
 
@@ -175,7 +181,7 @@ class MinimaxTranspositionPlayer:
 
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = self.minimax(board, 4, self.symbol, True)[:2]
+        answer = self.minimax(board, 2, self.symbol, True)[:2]
         return answer[0], answer[1]
 
     def check_transposition_table(self, board, symbol):
@@ -241,7 +247,7 @@ class MinimaxTranspositionPlayer:
         return spacesControlled(board, symbol)
 
     def utility(self, board, symbol):
-        return noOpponentCorners(board, symbol)
+        return spacesControlled(board, symbol)
 
     def flipSymbol(self, symbol):
         if symbol == 'X':
@@ -250,7 +256,7 @@ class MinimaxTranspositionPlayer:
             return 'X'
 
 
-def minimax2(board, depth, symbol, max, weight):
+def minimax2(board, depth, symbol, max):
     if max:
         best = [-1, -1, -inf]
     else:
@@ -260,12 +266,12 @@ def minimax2(board, depth, symbol, max, weight):
         return [-1, -1, endgameUtility(board, symbol)]
 
     elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
-        return [-1, -1, utility2(board, symbol, weight)]
+        return [-1, -1, utility2(board, symbol)]
 
     for move in board.calc_valid_moves(symbol):
         baseBoard = copy.deepcopy(board)
         baseBoard.make_move(symbol, move)
-        score = minimax2(baseBoard, depth - 1, flipSymbol(symbol), not max, weight)
+        score = minimax2(baseBoard, depth - 1, flipSymbol(symbol), not max)
         score[0], score[1] = move[0], move[1]
 
         if max:
@@ -312,10 +318,10 @@ def endgameUtility(board, symbol):
 
 
 def utility(board, symbol):
-    return noOpponentCorners(board, symbol)
+    return spacesControlled(board, symbol)
 
 
-def utility2(board, symbol, weight):
+def utility2(board, symbol):
     return noOpponentCorners(board, symbol)
 
 
@@ -331,64 +337,27 @@ class CombinedPlayer:
     def __init__(self, symbol):
         self.symbol = symbol
         self.transposition_table = {}
-        self.moveMade = False
 
     def get_move(self, board):
         # #Sneaky move is the next 4 lines, comment out if testing
-        # if not self.moveMade:
-        #     scores = board.calc_scores()
-        #     combined = scores["X"] + scores["O"]
-        #     if (combined == 4):
-        #         time.sleep(3)
-        #     else:
-        #         self.moveMade = True
-
+        scores = board.calc_scores()
+        combined = scores["X"] + scores["O"]
+        if (combined == 4):
+            time.sleep(3)
         if len(board.calc_valid_moves(self.symbol)) == 1:
             return board.calc_valid_moves(self.symbol)[0]
-        answer = self.AlphaBeta2(board, 4, self.symbol)
-        # print(answer)
+        answer = AlphaBeta(board, 4, self.symbol)
         return answer[0], answer[1]
 
-    def check_transposition_table(self, board, symbol):
-        # @TODO should in statement actually be .get attempt? O(N) vs O(1)
-        rot_original = board._board
-
-        # check original board
-        rot_original_hash = hash(str(rot_original))
-        if rot_original_hash in self.transposition_table:
-            return self.transposition_table.get(rot_original_hash)
-
-        # rotate board 90 degrees
-        rot_90 = list(zip(*reversed(copy.deepcopy(rot_original))))
-        rot_90_hash = hash(str(rot_90))
-        if rot_90_hash in self.transposition_table:
-            return self.transposition_table.get(rot_90_hash)
-
-        # rotate board 180 degrees
-        rot_180 = list(zip(*reversed(copy.deepcopy(rot_90))))
-        rot_180_hash = hash(str(rot_180))
-        if rot_180_hash in self.transposition_table:
-            return self.transposition_table.get(rot_180_hash)
-
-        # rotate board 270 degrees
-        rot_270 = list(zip(*reversed(copy.deepcopy(rot_180))))
-        rot_270_hash = hash(str(rot_270))
-        if rot_270_hash in self.transposition_table:
-            return self.transposition_table.get(rot_270_hash)
-
-        # add rot_original to table (not found otherwise)
-        score = self.utility(board, symbol)
-        self.transposition_table[rot_original_hash] = score
-        return score
-
-    def AlphaBeta2(self, board, depth, symbol):
+    def AlphaBeta(board, depth, symbol):
         def max_value(board, alpha, beta, symbol, depth):
             if not board.game_continues():
                 return [-1, -1, endgameUtility(board, symbol)]
 
             elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
-                return [-1, -1, self.check_transposition_table(board, symbol)]
+                return [-1, -1, utility(board, symbol)]
             best = [-1, -1, -inf]
+
             for move in board.calc_valid_moves(symbol):
                 copied_board = copy.deepcopy(board)
                 copied_board.make_move(symbol, move)
@@ -405,9 +374,10 @@ class CombinedPlayer:
             if not board.game_continues():
                 return [-1, -1, endgameUtility(board, symbol)]
             elif depth == 0 or len(board.calc_valid_moves(symbol)) == 0:
-                return [-1, -1, self.check_transposition_table(board, symbol)]
+                return [-1, -1, utility(board, symbol)]
 
             best = [-1, -1, inf]
+
             for move in board.calc_valid_moves(symbol):
                 copied_board = copy.deepcopy(board)
                 copied_board.make_move(symbol, move)
@@ -422,5 +392,8 @@ class CombinedPlayer:
 
         return max_value(board, -inf, inf, symbol, depth)
 
-    def utility(self, board, symbol):
-        return noOpponentCorners(board, symbol)
+        def utility(board, symbol):
+            return NoOpponentCornersPlayer(board, symbol)
+
+        def endgameUtility(board, symbol):
+            return spacesControlled(board, symbol)

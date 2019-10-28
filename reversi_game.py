@@ -65,7 +65,7 @@ def print_scores(score_map):
     print()
 
 
-def compare_players(player1, player2, board_size=6, board_filename=None):
+def compare_players(player1, player2, board_size=8, board_filename=None):
     game_count_map = {player1.symbol: 0, player2.symbol: 0, "TIE": 0}
     time_elapsed_map = {player1.symbol: 0, player2.symbol: 0}
     for i in range(1, 11):
@@ -89,7 +89,14 @@ def compare_players(player1, player2, board_size=6, board_filename=None):
 
 def main():
     # ReversiGame(MinimaxPlayer("X"), AlphaBetaPlayer("O"))
-    compare_players(MinimaxPlayer("X"), AlphaBetaPlayer("O"))
+    # print("Combined vs AB")
+    # compare_players(CombinedPlayer("X"), AlphaBetaPlayer("O"))
+    # print("Combined vs Transposition")
+    # compare_players(CombinedPlayer("X"), MinimaxTranspositionPlayer("O"))
+    print("Combined vs No Opponent Corners")
+    compare_players(CombinedPlayer("X"), NoOpponentCornersPlayer("O"))
+    # print("Combined vs MinMaxRandom")
+    # compare_players(CombinedPlayer("X"), MinimaxRandomPlayer("O"))
     # compare_players(AlphaBetaPlayer("X"), MinimaxPlayer("O"))
     # compare_players(MinimaxPlayer("X"), AlphaBetaPlayer("O"))
     # compare_players(MinimaxTranspositionPlayer("X"), MinimaxPlayer("O"))
