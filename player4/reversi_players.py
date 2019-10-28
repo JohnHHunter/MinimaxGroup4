@@ -429,3 +429,16 @@ class CombinedPlayer:
 
     def utility(self, board, symbol):
         return noOpponentCorners(board, symbol)
+
+
+def quiescence(board, symbol):
+    # is there an available edge/corner move?
+    for x in range(board.get_size()):
+        for y in range(board.get_size()):
+            if board.get_symbol_for_position((x, y)) == symbol:
+                if (x == 0 and y == 0) or (x == board.get_size() - 1 and y == board.get_size() - 1):
+                    score += (weight * weight)
+                elif x == 0 or y == 0 or x == board.get_size() - 1 or y == board.get_size() - 1:
+                    score += weight
+                else:
+                    score += 1
