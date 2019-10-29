@@ -81,6 +81,8 @@ class MinimaxRandomPlayer:
         answer = minimax(board, 2, self.symbol, True)[:2]
         return answer[0], answer[1]
 
+    def set_symbol(self, symbol):
+        self.symbol = symbol
     
 class AlphaBetaPlayer:
     def __init__(self, symbol):
@@ -92,6 +94,9 @@ class AlphaBetaPlayer:
         answer = AlphaBeta(board, 2, self.symbol)
         # print(answer)
         return answer[0], answer[1]
+
+    def set_symbol(self, symbol):
+        self.symbol = symbol
 
 
 def AlphaBeta(board, depth, symbol):
@@ -150,6 +155,9 @@ class MinimaxPlayer:
         answer = minimax(board, 2, self.symbol, True)[:2]
         return answer[0], answer[1]
 
+    def set_symbol(self, symbol):
+        self.symbol = symbol
+
 
 class NoOpponentCornersPlayer:
 
@@ -183,6 +191,9 @@ class MinimaxTranspositionPlayer:
             return board.calc_valid_moves(self.symbol)[0]
         answer = self.minimax(board, 2, self.symbol, True)[:2]
         return answer[0], answer[1]
+
+    def set_symbol(self, symbol):
+        self.symbol = symbol
 
     def check_transposition_table(self, board, symbol):
         # @TODO should in statement actually be .get attempt? O(N) vs O(1)
@@ -348,6 +359,9 @@ class CombinedPlayer:
             return board.calc_valid_moves(self.symbol)[0]
         answer = AlphaBeta(board, 4, self.symbol)
         return answer[0], answer[1]
+
+    def set_symbol(self, symbol):
+        self.symbol = symbol
 
     def AlphaBeta(board, depth, symbol):
         def max_value(board, alpha, beta, symbol, depth):
